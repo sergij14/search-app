@@ -70,10 +70,10 @@ class SearchService {
 
   #findNode(chars, node) {
     if (chars.length === 0) {
-      if (node.values) {
+      if (node?.values) {
         return node.values;
       }
-      return this.#aggregateValues(node);
+      return this.#aggregateValues(node) || undefined;
     }
 
     const char = chars.shift();
@@ -84,7 +84,7 @@ class SearchService {
     const searchTerm = this.#sanitizeWords(query)[0];
     const indexes = this.#findNode(this.#wordToChars(searchTerm), this.#root);
 
-    console.log(indexes);
+    return indexes || [];
   }
 }
 
