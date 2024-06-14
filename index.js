@@ -1,7 +1,7 @@
 const express = require("express");
 const SearchService = require("./SearchService");
 
-const data = require("./small-data.json");
+const data = require("./data.json");
 
 const app = express();
 const port = 3000;
