@@ -28,7 +28,15 @@ class SearchService {
   }
 
   #mapWordChars(chars, index, node) {
-    console.log(chars, index);
+    if (!chars.length) {
+      console.log(index);
+
+      return;
+    }
+    const char = chars.shift();
+    node[char] = node[char] || {};
+
+    this.#mapWordChars(chars, index, node[char]);
   }
 
   #addData() {
