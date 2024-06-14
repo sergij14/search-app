@@ -86,8 +86,13 @@ class SearchService {
       return [];
     }
 
-    const resultIndexes = [];
     const node = this.#findNode(this.#wordToChars(searchTerm), this.#root);
+
+    if (!node) {
+      return [];
+    }
+
+    const resultIndexes = [];
     this.#aggregateNodes(node, resultIndexes);
 
     return resultIndexes;
