@@ -12,6 +12,8 @@ class SearchService {
     this.regex = regex;
 
     this.#addData();
+
+    console.log(JSON.stringify(this.#root, null, 4));
   }
 
   #sanitizeWords(string) {
@@ -29,7 +31,11 @@ class SearchService {
 
   #mapWordChars(chars, index, node) {
     if (!chars.length) {
-      console.log(index);
+      node.value = node.value || null;
+
+      if (!node.value) {
+        node.value = index;
+      }
 
       return;
     }
@@ -48,9 +54,9 @@ class SearchService {
         }
 
         const words = this.#sanitizeWords(fieldValue);
-        words.forEach((word) =>
-          this.#mapWordChars(this.#wordToChars(word), index, this.#root)
-        );
+        words.forEach((word) => {
+          this.#mapWordChars(this.#wordToChars(word), index, this.#root);
+        });
       });
     });
   }
