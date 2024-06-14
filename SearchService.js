@@ -4,15 +4,17 @@ const REGEX = {
 };
 
 class SearchService {
+  #root = {};
+
   constructor(data = [], { fields = [], regex = REGEX }) {
     this.data = data;
     this.fields = fields;
     this.regex = regex;
 
-    this.addData();
+    this.#addData();
   }
 
-  sanitizeWords(string) {
+  #sanitizeWords(string) {
     return string
       .toLowerCase()
       .replace(this.regex.replace, "")
@@ -21,7 +23,15 @@ class SearchService {
       .filter((word) => word);
   }
 
-  addData() {
+  #wordToChars(words) {
+    return words.split("");
+  }
+
+  #mapWordChars(chars, index, node) {
+    console.log(chars, index);
+  }
+
+  #addData() {
     this.data.forEach((item, index) => {
       this.fields.forEach((field) => {
         const fieldValue = item[field];
@@ -29,9 +39,10 @@ class SearchService {
           return;
         }
 
-        const words = this.sanitizeWords(fieldValue);
-
-        console.log(words);
+        const words = this.#sanitizeWords(fieldValue);
+        words.forEach((word) =>
+          this.#mapWordChars(this.#wordToChars(word), index, this.#root)
+        );
       });
     });
   }
