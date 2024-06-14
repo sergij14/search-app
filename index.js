@@ -1,20 +1,24 @@
 const express = require("express");
 const SearchService = require("./SearchService");
 
-const smallData = require("./small-data.json");
+const data = require("./small-data.json");
 
 const app = express();
 const port = 3000;
 
-const searchService = new SearchService(smallData, {
+const searchService = new SearchService(data, {
   fields: ["title", "text"],
 });
 
+app.use(express.static("public"));
+
 app.get("/search", (req, res) => {
   const { query } = req;
-  res.send(searchService.search(query.term));
+  res.send({ data: searchService.search(query.term) });
 });
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+app.get("/data", (req, res) => {
+  res.send({ data });
 });
+
+app.listen(port, () => console.log(`App listening on port ${port}`));
