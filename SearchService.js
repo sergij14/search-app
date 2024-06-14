@@ -27,7 +27,7 @@ class SearchService {
   }
 
   #mapWordChars(chars, index, node) {
-    if (!chars.length) {
+    if (chars.length === 0) {
       node.value = node.value || null;
 
       if (!node.value) {
@@ -61,9 +61,21 @@ class SearchService {
     });
   }
 
+  #aggregateValue(node) {
+    for (let key in node) {
+      if (key === "value") {
+        return node.value;
+      }
+      return this.#aggregateValue(node[key]);
+    }
+  }
+
   #findNode(chars, node) {
-    if (!chars.length) {
-      return node;
+    if (chars.length === 0) {
+      if (node.value) {
+        return node.value;
+      }
+      return this.#aggregateValue(node);
     }
 
     const char = chars.shift();
@@ -72,11 +84,9 @@ class SearchService {
 
   search(query) {
     const searchTerm = this.#sanitizeWords(query)[0];
-    console.log(searchTerm);
+    const index = this.#findNode(this.#wordToChars(searchTerm), this.#root);
 
-    const node = this.#findNode(this.#wordToChars(searchTerm), this.#root);
-
-    console.log(node);
+    console.log(index);
   }
 }
 
