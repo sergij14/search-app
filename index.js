@@ -1,5 +1,5 @@
 const express = require("express");
-const SearchService = require("./SearchService");
+const SearchService = require("./src/SearchService");
 
 const data = require("./data.json");
 

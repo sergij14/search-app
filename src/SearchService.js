@@ -1,3 +1,5 @@
+const { sanitizeWords, wordToChars } = require("./utils");
+
 class SearchService {
   #root = {};
 
@@ -11,18 +13,6 @@ class SearchService {
     this.min = options.min || 3;
 
     this.#addData();
-  }
-
-  #sanitizeWords(string) {
-    return string
-      .toLowerCase()
-      .replace(this.regex.replace, "")
-      .split(this.regex.split)
-      .filter((word) => word);
-  }
-
-  #wordToChars(words) {
-    return words.split("");
   }
 
   #mapWordChars(chars, index, node) {
@@ -49,12 +39,16 @@ class SearchService {
           return;
         }
 
-        const words = this.#sanitizeWords(fieldValue);
+        const words = sanitizeWords(
+          fieldValue,
+          this.regex.replace,
+          this.regex.split
+        );
         words.forEach((word) => {
           if (word.length < this.min) {
             return;
           }
-          this.#mapWordChars(this.#wordToChars(word), index, this.#root);
+          this.#mapWordChars(wordToChars(word), index, this.#root);
         });
       });
     });
@@ -81,12 +75,16 @@ class SearchService {
   }
 
   search(query) {
-    const searchTerm = this.#sanitizeWords(query)[0];
+    const searchTerm = sanitizeWords(
+      query,
+      this.regex.replace,
+      this.regex.split
+    )[0];
     if (searchTerm.length < this.min) {
       return [];
     }
 
-    const node = this.#findNode(this.#wordToChars(searchTerm), this.#root);
+    const node = this.#findNode(wordToChars(searchTerm), this.#root);
 
     if (!node) {
       return [];
