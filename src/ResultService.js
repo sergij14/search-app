@@ -1,28 +1,39 @@
+const { getRegExUnion, getRegEx } = require("./utils");
+
 class ResultService {
-  #indexes = new Set();
-  constructor(data, options) {
-    this.data = data || [];
+  #results = new Map();
+  constructor(data = [], options = {}) {
+    this.data = data;
     this.fields = options.fields || [];
+    this.searchTerms = options.searchTerms || [];
+  }
+
+  #generateHints(metadata, field, fieldValue) {
+    metadata.preview[field] = fieldValue.replace(
+      getRegEx(getRegExUnion(this.searchTerms)),
+      (match) => `<mark>${match}</mark>`
+    );
+
+    return metadata;
   }
 
   addData(indexes) {
     indexes.forEach((index) => {
-      if (this.#indexes.has(index)) {
+      if (this.#results.has(index)) {
         return;
       }
 
-      this.#indexes.add(index);
+      let metadata = { preview: {} };
+      this.fields.forEach((field) =>
+        this.#generateHints(metadata, field, this.data[index][field])
+      );
 
-      const item = this.data[index];
-
-      console.log(item);
-
-      this.fields.forEach;
+      this.#results.set(index, { index, metadata });
     });
   }
 
-  get indexes() {
-    return Array.from(this.#indexes);
+  get results() {
+    return Array.from(this.#results.values());
   }
 }
 

@@ -99,7 +99,7 @@ class SearchService {
 
     this.#aggregateNodes(node);
 
-    return this.resultService.indexes;
+    return this.resultService.results;
   }
 }
 

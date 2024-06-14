@@ -7,8 +7,13 @@ function SearchForm({ setResults, setLoading, onSetInitialData, initialData }) {
       setLoading(true);
       fetch(`/search?term=${queryString}`)
         .then((res) => res.json())
-        .then(({ data: indexes }) => {
-          setResults(indexes.map((idx) => initialData[idx]));
+        .then(({ data }) => {
+          setResults(
+            data.map(({ index, metadata: { preview } }) => ({
+              ...initialData[index],
+              preview,
+            }))
+          );
           setLoading(false);
         });
       return;
@@ -33,7 +38,7 @@ function SearchResults({ results }) {
   return (
     <div>
       <h2>Data count: {results?.length || 0}</h2>
-      {(results || []).map(({ title, id, text }) => {
+      {(results || []).map(({ title, id, text, preview = {} }) => {
         return (
           <div
             key={id}
@@ -43,9 +48,17 @@ function SearchResults({ results }) {
               marginBottom: "10px",
             }}
           >
-            <h3>{title}</h3>
+            <h3
+              dangerouslySetInnerHTML={{
+                __html: `${preview?.title ? preview.title : title}`,
+              }}
+            />
             <p>id: {id}</p>
-            <p>{text}</p>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: `${preview?.text ? preview.text : text}`,
+              }}
+            />
           </div>
         );
       })}
@@ -72,7 +85,7 @@ function MyApp() {
   const onSetInitialData = () => {
     fetchData()
       .then((res) => res.json())
-      .then((data) => {
+      .then(({ data }) => {
         setInitialData(data);
         setLoading(false);
         setResults(undefined);
