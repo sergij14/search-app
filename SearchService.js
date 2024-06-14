@@ -10,7 +10,7 @@ class SearchService {
     };
 
     this.#addData();
-    console.log(JSON.stringify(this.#root, null, 4));
+    // console.log(JSON.stringify(this.#root, null, 4));
   }
 
   #sanitizeWords(string) {
@@ -59,6 +59,24 @@ class SearchService {
         });
       });
     });
+  }
+
+  #findNode(chars, node) {
+    if (!chars.length) {
+      return node;
+    }
+
+    const char = chars.shift();
+    return this.#findNode(chars, node?.[char]);
+  }
+
+  search(query) {
+    const searchTerm = this.#sanitizeWords(query)[0];
+    console.log(searchTerm);
+
+    const node = this.#findNode(this.#wordToChars(searchTerm), this.#root);
+
+    console.log(node);
   }
 }
 

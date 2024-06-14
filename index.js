@@ -40,3 +40,5 @@ const data = [
 ];
 
 const searchService = new SearchService(data, { fields: ["title", "text"] });
+
+searchService.search('call')
