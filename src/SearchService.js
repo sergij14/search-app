@@ -1,4 +1,5 @@
 const { sanitizeWords, wordToChars } = require("./utils");
+const ResultService = require("./ResultService");
 
 class SearchService {
   #root = {};
@@ -54,13 +55,13 @@ class SearchService {
     });
   }
 
-  #aggregateNodes(node, result) {
+  #aggregateNodes(node) {
     if (node.values?.length) {
-      result.push(...node.values);
+      this.resultService.addData(node.values);
     }
     for (let key in node) {
       if (key !== "values") {
-        this.#aggregateNodes(node[key], result);
+        this.#aggregateNodes(node[key]);
       }
     }
   }
@@ -75,11 +76,12 @@ class SearchService {
   }
 
   search(query) {
-    const searchTerm = sanitizeWords(
+    const [searchTerm, ...restSearchTerms] = sanitizeWords(
       query,
       this.regex.replace,
       this.regex.split
-    )[0];
+    );
+
     if (searchTerm.length < this.min) {
       return [];
     }
@@ -90,10 +92,14 @@ class SearchService {
       return [];
     }
 
-    const resultIndexes = [];
-    this.#aggregateNodes(node, resultIndexes);
+    this.resultService = new ResultService(this.data, {
+      fields: this.fields,
+      searchTerms: [searchTerm, ...(restSearchTerms || [])],
+    });
 
-    return resultIndexes;
+    this.#aggregateNodes(node);
+
+    return this.resultService.indexes;
   }
 }
 
