@@ -22,14 +22,18 @@ const data = [
     title: "Zen and the Art of Archery",
     text: "At first sight it must seem...",
   },
-
   {
     id: 4,
     title: "Zen and the Art of Archery",
     text: "At first sight it must seem...",
   },
+  {
+    id: 5,
+    title: "sample title",
+    text: "sampel default text...",
+  },
 ];
 
 const searchService = new SearchService(data, { fields: ["title", "text"] });
 
-searchService.search("fir");
+searchService.search("fir ");

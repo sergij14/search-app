@@ -10,7 +10,6 @@ class SearchService {
     };
 
     this.#addData();
-    // console.log(JSON.stringify(this.#root, null, 4));
   }
 
   #sanitizeWords(string) {
@@ -18,7 +17,6 @@ class SearchService {
       .toLowerCase()
       .replace(this.regex.replace, "")
       .split(this.regex.split)
-      .map((word) => word.trim())
       .filter((word) => word);
   }
 
