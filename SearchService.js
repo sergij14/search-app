@@ -8,6 +8,7 @@ class SearchService {
       split: /\s/g,
       replace: /[.,\/#!$%\^&\*;:{}=\-_`~()'"“]/g,
     };
+    this.min = options.min || 3;
 
     this.#addData();
   }
@@ -59,21 +60,20 @@ class SearchService {
     });
   }
 
-  #aggregateValues(node) {
+  #aggregateNodes(node, result) {
+    if (node.values?.length) {
+      result.push(...node.values);
+    }
     for (let key in node) {
-      if (key === "values") {
-        return node.values;
+      if (key !== "values") {
+        this.#aggregateNodes(node[key], result);
       }
-      return this.#aggregateValues(node[key]);
     }
   }
 
   #findNode(chars, node) {
     if (chars.length === 0) {
-      if (node?.values) {
-        return node.values;
-      }
-      return this.#aggregateValues(node) || undefined;
+      return node;
     }
 
     const char = chars.shift();
@@ -82,9 +82,15 @@ class SearchService {
 
   search(query) {
     const searchTerm = this.#sanitizeWords(query)[0];
-    const indexes = this.#findNode(this.#wordToChars(searchTerm), this.#root);
+    if (searchTerm.length < this.min) {
+      return [];
+    }
 
-    return indexes || [];
+    const resultIndexes = [];
+    const node = this.#findNode(this.#wordToChars(searchTerm), this.#root);
+    this.#aggregateNodes(node, resultIndexes);
+
+    return resultIndexes;
   }
 }
 
