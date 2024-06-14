@@ -1,18 +1,15 @@
-const REGEX = {
-  split: /\s/g,
-  replace: /[.,\/#!$%\^&\*;:{}=\-_`~()'"“]/g,
-};
-
 class SearchService {
   #root = {};
 
-  constructor(data = [], { fields = [], regex = REGEX }) {
-    this.data = data;
-    this.fields = fields;
-    this.regex = regex;
+  constructor(data = [], options = {}) {
+    this.data = options.data || data;
+    this.fields = options.fields || [];
+    this.regex = options.regex || {
+      split: /\s/g,
+      replace: /[.,\/#!$%\^&\*;:{}=\-_`~()'"“]/g,
+    };
 
     this.#addData();
-
     console.log(JSON.stringify(this.#root, null, 4));
   }
 
@@ -55,6 +52,9 @@ class SearchService {
 
         const words = this.#sanitizeWords(fieldValue);
         words.forEach((word) => {
+          if (word.length < this.min) {
+            return;
+          }
           this.#mapWordChars(this.#wordToChars(word), index, this.#root);
         });
       });
