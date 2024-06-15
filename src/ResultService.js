@@ -1,4 +1,4 @@
-const { getRegExUnion, getRegEx } = require("./utils");
+const { getRegEx } = require("./utils");
 
 class ResultService {
   #results = new Map();
@@ -9,8 +9,16 @@ class ResultService {
   }
 
   #generateHints(metadata, field, fieldValue) {
+    const multipleMatch = fieldValue.match(
+      getRegEx(this.searchTerms.join(" "))
+    );
+
+    metadata.priority += multipleMatch ? multipleMatch.length + 1 : 1;
+
     metadata.preview[field] = fieldValue.replace(
-      getRegEx(getRegExUnion(this.searchTerms)),
+      getRegEx(
+        multipleMatch?.length ? this.searchTerms.join(" ") : this.searchTerms[0]
+      ),
       (match) => `<mark>${match}</mark>`
     );
 
@@ -23,7 +31,7 @@ class ResultService {
         return;
       }
 
-      let metadata = { preview: {} };
+      let metadata = { preview: {}, priority: 0 };
       this.fields.forEach((field) =>
         this.#generateHints(metadata, field, this.data[index][field])
       );
@@ -33,7 +41,9 @@ class ResultService {
   }
 
   get results() {
-    return Array.from(this.#results.values());
+    return Array.from(this.#results.values()).sort(
+      (a, b) => b.metadata.priority - a.metadata.priority
+    );
   }
 }
 
