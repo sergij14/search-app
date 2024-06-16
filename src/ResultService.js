@@ -19,7 +19,7 @@ class ResultService {
       getRegEx(
         multipleMatch?.length ? this.searchTerms.join(" ") : this.searchTerms[0]
       ),
-      (match) => `<mark>${match}</mark>`
+      "<mark>$&</mark>"
     );
 
     return metadata;
