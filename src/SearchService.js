@@ -101,6 +101,10 @@ class SearchService {
 
     return this.resultService.results;
   }
+
+  get trie() {
+    return this.#root;
+  }
 }
 
 module.exports = SearchService;
