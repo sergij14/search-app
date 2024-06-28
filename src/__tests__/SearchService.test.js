@@ -1,4 +1,4 @@
-const SearchService = require("../src/SearchService");
+import { SearchService } from "../core/SearchService";
 
 const data = [
   {
