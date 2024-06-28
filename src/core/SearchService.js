@@ -1,7 +1,7 @@
-const { sanitizeWords, wordToChars } = require("./utils");
-const ResultService = require("./ResultService");
+import { ResultService } from "./ResultService";
+import { sanitizeWords, wordToChars } from "./utils";
 
-class SearchService {
+export class SearchService {
   #root = {};
 
   constructor(data = [], options = {}) {
@@ -106,5 +106,3 @@ class SearchService {
     return this.#root;
   }
 }
-
-module.exports = SearchService;

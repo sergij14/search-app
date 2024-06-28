@@ -1,5 +1,5 @@
 # Search App
 
-Node.js application for searching. Application gets the data, then it creates a Trie data structure and uses it for data retrieval.
+An implementation of searching functionality, using a Trie data structure.
 
-To launch the app on your local machine you should run `npm install && npm run dev`
+To launch the demo app on your local machine you should open an `index.html` file.

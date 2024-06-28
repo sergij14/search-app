@@ -1,6 +1,6 @@
-const { getRegEx } = require("./utils");
+import { getRegEx } from "./utils";
 
-class ResultService {
+export class ResultService {
   #results = new Map();
   constructor(data = [], options = {}) {
     this.data = data;
@@ -46,5 +46,3 @@ class ResultService {
     );
   }
 }
-
-module.exports = ResultService;
