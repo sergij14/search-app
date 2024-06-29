@@ -131,8 +131,6 @@ export class SearchService {
 
     this.#aggregateNodes(node);
 
-    console.log(this.suggest(searchTerm));
-
     return this.resultService.results;
   }
 
