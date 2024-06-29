@@ -1,12 +1,13 @@
-import { List, Space } from "antd";
+import { List, Typography } from "antd";
 
 export default function SearchResults({ results }) {
   return (
-    <Space
-      direction="vertical"
-      style={{ margin: "20px 0", width: "100%" }}
-      size="middle"
-    >
+    <>
+      {results ? (
+        <Typography.Title level={4} style={{ marginTop: "40px" }}>
+          Results count: {results.length}
+        </Typography.Title>
+      ) : null}
       <List
         pagination={{
           position: "bottom",
@@ -39,6 +40,6 @@ export default function SearchResults({ results }) {
           </List.Item>
         )}
       />
-    </Space>
+    </>
   );
 }
