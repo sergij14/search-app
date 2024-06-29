@@ -4,10 +4,12 @@ import { AutoComplete, Button, Flex, Select, Space, Typography } from "antd";
 export default function SearchForm({
   suggestions,
   searchFields,
+  minCharsCount,
   onSearch,
   setQueryString,
   setResults,
   setSearchFields,
+  setMinCharsCount,
   onSubmit,
 }) {
   return (
@@ -22,6 +24,8 @@ export default function SearchForm({
           onSearch={(term) => onSearch(term)}
           placeholder="Search term..."
           onChange={(value) => setQueryString(value)}
+          onClear={() => setResults(undefined)}
+          allowClear
         />
         <Button size="large" type="primary" onClick={onSubmit}>
           Search
@@ -29,11 +33,8 @@ export default function SearchForm({
       </Space.Compact>
 
       <Flex gap="middle" justify="space-between">
-        <Button onClick={() => setResults(undefined)}>Reset</Button>
-        <Flex gap={10} align="baseline">
-          <Typography.Text style={{ marginBottom: "5px" }}>
-            Fields to search in:
-          </Typography.Text>
+        <Flex gap={10} vertical>
+          <Typography.Text>Fields to search in:</Typography.Text>
           <Select
             onChange={(value) => setSearchFields(value)}
             style={{ width: "200px" }}
@@ -42,6 +43,19 @@ export default function SearchForm({
             options={[
               { label: "title", value: "title" },
               { label: "body", value: "body" },
+            ]}
+          />
+        </Flex>
+        <Flex gap={10} vertical>
+          <Typography.Text>Min characters count:</Typography.Text>
+          <Select
+            onChange={(value) => setMinCharsCount(value)}
+            style={{ width: "200px" }}
+            value={minCharsCount}
+            options={[
+              { label: 2, value: 2 },
+              { label: 3, value: 3 },
+              { label: 4, value: 4 },
             ]}
           />
         </Flex>
