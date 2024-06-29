@@ -7,6 +7,7 @@ const useApp = () => {
   const [searchService, setSearchService] = useState();
   const [suggestions, setSuggestions] = useState([]);
   const [queryString, setQueryString] = useState("");
+  const [searchFields, setSearchFields] = useState(["title", "body"]);
   const fetchData = () => fetch("https://jsonplaceholder.typicode.com/posts");
 
   const onSearch = (term) => {
@@ -34,19 +35,20 @@ const useApp = () => {
     fetchData()
       .then((res) => res.json())
       .then((data) => {
-        setSearchService(
-          new SearchService(data, { fields: ["title", "body"] })
-        );
+        setSearchService(new SearchService(data, { fields: searchFields }));
         setInitialData(data);
       });
-  }, []);
+  }, [searchFields]);
 
   return {
     results: results || initialData,
     suggestions,
+    searchFields,
     onSearch,
     onSubmit,
     setQueryString,
+    setSearchFields,
+    setResults,
   };
 };
 
