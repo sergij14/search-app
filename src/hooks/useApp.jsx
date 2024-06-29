@@ -52,7 +52,8 @@ const useApp = () => {
   }, [minCharsCount, searchFields, initialData]);
 
   return {
-    results: results || initialData,
+    results,
+    initialData,
     suggestions,
     searchFields,
     minCharsCount,

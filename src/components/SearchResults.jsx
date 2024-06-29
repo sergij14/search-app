@@ -1,12 +1,21 @@
-import { List, Typography } from "antd";
+import { Button, Flex, List, Typography } from "antd";
 
-export default function SearchResults({ results }) {
+export default function SearchResults({ results, initialData, setResults }) {
   return (
     <>
       {results ? (
-        <Typography.Title level={4} style={{ marginTop: "40px" }}>
-          Results count: {results.length}
-        </Typography.Title>
+        <Flex align="baseline" justify="space-between">
+          <Typography.Title level={4} style={{ marginTop: "40px" }}>
+            Results count: {results.length}
+          </Typography.Title>
+          <Button
+            disabled={!results?.length}
+            icon={"X"}
+            onClick={() => setResults(undefined)}
+          >
+            Clear
+          </Button>
+        </Flex>
       ) : null}
       <List
         pagination={{
@@ -15,7 +24,7 @@ export default function SearchResults({ results }) {
           pageSize: 25,
           showSizeChanger: false,
         }}
-        dataSource={results}
+        dataSource={results || initialData}
         renderItem={({ title, id, body, preview = {} }) => (
           <List.Item>
             <List.Item.Meta

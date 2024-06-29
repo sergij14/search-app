@@ -7,7 +7,6 @@ export default function SearchForm({
   minCharsCount,
   onSearch,
   setQueryString,
-  setResults,
   setSearchFields,
   setMinCharsCount,
   onSubmit,
@@ -24,8 +23,6 @@ export default function SearchForm({
           onSearch={(term) => onSearch(term)}
           placeholder="Search term..."
           onChange={(value) => setQueryString(value)}
-          onClear={() => setResults(undefined)}
-          allowClear
         />
         <Button size="large" type="primary" onClick={onSubmit}>
           Search
