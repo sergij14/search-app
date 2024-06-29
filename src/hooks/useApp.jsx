@@ -8,12 +8,15 @@ const useApp = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [queryString, setQueryString] = useState("");
   const [searchFields, setSearchFields] = useState(["title", "body"]);
-  const [minCharsCount, setMinCharsCount] = useState(3);
+  const [minCharsCount, setMinCharsCount] = useState(2);
   const fetchData = () => fetch("https://jsonplaceholder.typicode.com/posts");
 
   const onSearch = (term) => {
+    if (!term.length) {
+      return setResults(undefined);
+    }
     setSuggestions(
-      (searchService?.suggest(term) || []).map((value) => ({ value }))
+      (searchService?.search(term, true) || []).map((value) => ({ value }))
     );
   };
 
@@ -48,6 +51,9 @@ const useApp = () => {
           min: minCharsCount,
         })
       );
+
+      setSuggestions([]);
+      setQueryString("");
     }
   }, [minCharsCount, searchFields, initialData]);
 

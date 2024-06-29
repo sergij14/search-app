@@ -15,6 +15,7 @@ export default function SearchForm({
     <>
       <Space.Compact style={{ width: "100%", marginBottom: "10px" }}>
         <AutoComplete
+          key={minCharsCount}
           options={suggestions}
           style={{ width: "100%" }}
           popupMatchSelectWidth={252}

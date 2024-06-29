@@ -2,6 +2,8 @@ import { getRegEx } from "./utils";
 
 export class ResultService {
   #results = new Map();
+  #suggestions = new Set();
+
   constructor(data = [], options = {}) {
     this.data = data;
     this.fields = options.fields || [];
@@ -25,6 +27,10 @@ export class ResultService {
     return metadata;
   }
 
+  addSuggestions(char) {
+    this.#suggestions.add(char);
+  }
+
   addData(indexes) {
     indexes.forEach((index) => {
       if (this.#results.has(index)) {
@@ -44,5 +50,9 @@ export class ResultService {
     return Array.from(this.#results.values()).sort(
       (a, b) => b.metadata.priority - a.metadata.priority
     );
+  }
+
+  get suggestions() {
+    return Array.from(this.#suggestions || []);
   }
 }

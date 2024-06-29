@@ -3,7 +3,6 @@ import { sanitizeWords, wordToChars } from "./utils";
 
 export class SearchService {
   #root = {};
-  #suggestions;
 
   constructor(data = [], options = {}) {
     this.data = options.data || data;
@@ -58,50 +57,27 @@ export class SearchService {
 
   #aggregateNodes(node, char) {
     if (node.values?.length) {
-      if (char) {
-        return this.#suggestions.add(char);
-      }
-
+      this.resultService.addSuggestions(char);
       this.resultService.addData(node.values);
     }
+
     for (let key in node) {
       if (key !== "values") {
-        this.#aggregateNodes(node[key], char ? char + key : undefined);
+        this.#aggregateNodes(node[key], char + key);
       }
     }
   }
 
-  #findNode(chars, node) {
+  #findNode(chars, node, char = "") {
     if (chars.length === 0) {
-      return node;
+      return { node, char };
     }
 
-    const char = chars.shift();
-    return this.#findNode(chars, node?.[char]);
+    const key = chars.shift();
+    return this.#findNode(chars, node?.[key], char + key);
   }
 
-  suggest(prefix) {
-    if (prefix.length < this.min) {
-      return [];
-    }
-
-    let node = this.#root;
-    let char = "";
-    this.#suggestions = new Set();
-
-    for (let i = 0; i < prefix.length; i++) {
-      if (!node[prefix[i]]) {
-        return [];
-      }
-      node = node[prefix[i]];
-      char += prefix[i];
-    }
-
-    this.#aggregateNodes(node, char);
-    return this.suggestions;
-  }
-
-  search(query) {
+  search(query, isSuggestions) {
     const [searchTerm, ...restSearchTerms] = sanitizeWords(
       query,
       this.regex.replace,
@@ -112,7 +88,7 @@ export class SearchService {
       return [];
     }
 
-    const node = this.#findNode(wordToChars(searchTerm), this.#root);
+    const { node, char } = this.#findNode(wordToChars(searchTerm), this.#root);
 
     if (!node) {
       return [];
@@ -123,16 +99,13 @@ export class SearchService {
       searchTerms: [searchTerm, ...(restSearchTerms || [])],
     });
 
-    this.#aggregateNodes(node);
-
-    return this.resultService.results;
+    this.#aggregateNodes(node, char);
+    return isSuggestions
+      ? this.resultService.suggestions
+      : this.resultService.results;
   }
 
   get trie() {
     return this.#root;
-  }
-
-  get suggestions() {
-    return Array.from(this.#suggestions);
   }
 }
