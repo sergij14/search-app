@@ -8,11 +8,7 @@ export default function SearchResults({ results, initialData, setResults }) {
           <Typography.Title level={4} style={{ marginTop: "40px" }}>
             Results count: {results.length}
           </Typography.Title>
-          <Button
-            disabled={!results?.length}
-            icon={"X"}
-            onClick={() => setResults(undefined)}
-          >
+          <Button icon={"X"} onClick={() => setResults(undefined)}>
             Clear
           </Button>
         </Flex>
