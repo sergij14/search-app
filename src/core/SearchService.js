@@ -75,6 +75,38 @@ export class SearchService {
     return this.#findNode(chars, node?.[char]);
   }
 
+  #suggestHelper(node, list, curr) {
+    if (!Object.keys(node).length) {
+      return;
+    }
+
+    if (node.values?.length) {
+      list.push(curr);
+    }
+
+    for (let char in node) {
+      this.#suggestHelper(node[char], list, curr + char);
+    }
+  }
+
+  suggest(prefix) {
+    let node = this.#root;
+    let curr = "";
+
+    for (let i = 0; i < prefix.length; i++) {
+      if (!node[prefix[i]]) {
+        return [];
+      }
+      node = node[prefix[i]];
+      curr += prefix[i];
+    }
+
+    let list = [];
+
+    this.#suggestHelper(node, list, curr);
+    return list;
+  }
+
   search(query) {
     const [searchTerm, ...restSearchTerms] = sanitizeWords(
       query,
@@ -98,6 +130,8 @@ export class SearchService {
     });
 
     this.#aggregateNodes(node);
+
+    console.log(this.suggest(searchTerm));
 
     return this.resultService.results;
   }
