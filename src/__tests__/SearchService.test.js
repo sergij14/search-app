@@ -45,19 +45,21 @@ describe("SearchService", () => {
   });
 
   it("should search through the trie, aggregate nodes and return item indexes", () => {
-    expect(searchService.search("ade").map((item) => item.index)).toEqual([
-      0, 3,
-    ]);
-    expect(searchService.search("aam").map((item) => item.index)).toEqual([2]);
+    expect(
+      searchService.search("ade").results.map((item) => item.index)
+    ).toEqual([0, 3]);
+    expect(
+      searchService.search("aam").results.map((item) => item.index)
+    ).toEqual([2]);
   });
 
   it("should search through the trie and return item indexes", () => {
-    expect(searchService.search("adeel").map((item) => item.index)).toEqual([
-      0, 3,
-    ]);
-    expect(searchService.search("aamir").map((item) => item.index)).toEqual([
-      2,
-    ]);
+    expect(
+      searchService.search("adeel").results.map((item) => item.index)
+    ).toEqual([0, 3]);
+    expect(
+      searchService.search("aamir").results.map((item) => item.index)
+    ).toEqual([2]);
   });
 
   it("should not index certain words when min prop is provided", () => {
@@ -66,11 +68,14 @@ describe("SearchService", () => {
       min: 4,
     });
 
-    expect(searchService.search("ade")).toEqual([]);
-    expect(searchService.search("aam")).toEqual([]);
+    expect(searchService.search("ade").results).toEqual([]);
+    expect(searchService.search("aam").results).toEqual([]);
   });
 
   it("should suggest words", () => {
-    expect(searchService.search("sol", true)).toEqual(["solangi", "sollicitudin"]);
+    expect(searchService.search("sol").suggestions).toEqual([
+      "solangi",
+      "sollicitudin",
+    ]);
   });
 });

@@ -77,7 +77,7 @@ export class SearchService {
     return this.#findNode(chars, node?.[key], char + key);
   }
 
-  search(query, isSuggestions) {
+  search(query) {
     const [searchTerm, ...restSearchTerms] = sanitizeWords(
       query,
       this.regex.replace,
@@ -85,13 +85,13 @@ export class SearchService {
     );
 
     if (searchTerm.length < this.min) {
-      return [];
+      return { suggestions: [], results: [] };
     }
 
     const { node, char } = this.#findNode(wordToChars(searchTerm), this.#root);
 
     if (!node) {
-      return [];
+      return { suggestions: [], results: [] };
     }
 
     this.resultService = new ResultService(this.data, {
@@ -100,9 +100,11 @@ export class SearchService {
     });
 
     this.#aggregateNodes(node, char);
-    return isSuggestions
-      ? this.resultService.suggestions
-      : this.resultService.results;
+
+    return {
+      suggestions: this.resultService.suggestions,
+      results: this.resultService.results,
+    };
   }
 
   get trie() {

@@ -16,7 +16,9 @@ const useApp = () => {
       return setResults(undefined);
     }
     setSuggestions(
-      (searchService?.search(term, true) || []).map((value) => ({ value }))
+      (searchService?.search(term).suggestions || []).map((value) => ({
+        value,
+      }))
     );
   };
 
@@ -25,7 +27,7 @@ const useApp = () => {
       return setResults(undefined);
     }
 
-    const searchResults = searchService?.search(queryString) || [];
+    const { results: searchResults } = searchService?.search(queryString) || [];
 
     setResults(
       searchResults.map(({ index, metadata: { preview } }) => ({
