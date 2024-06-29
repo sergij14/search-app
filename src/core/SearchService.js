@@ -3,6 +3,7 @@ import { sanitizeWords, wordToChars } from "./utils";
 
 export class SearchService {
   #root = {};
+  #suggestions;
 
   constructor(data = [], options = {}) {
     this.data = options.data || data;
@@ -55,13 +56,17 @@ export class SearchService {
     });
   }
 
-  #aggregateNodes(node) {
+  #aggregateNodes(node, char) {
     if (node.values?.length) {
+      if (char) {
+        return this.#suggestions.add(char);
+      }
+
       this.resultService.addData(node.values);
     }
     for (let key in node) {
       if (key !== "values") {
-        this.#aggregateNodes(node[key]);
+        this.#aggregateNodes(node[key], char ? char + key : undefined);
       }
     }
   }
@@ -75,40 +80,25 @@ export class SearchService {
     return this.#findNode(chars, node?.[char]);
   }
 
-  #suggestHelper(node, list, curr) {
-    if (!Object.keys(node).length) {
-      return;
-    }
-
-    if (node.values?.length) {
-      list.push(curr);
-    }
-
-    for (let char in node) {
-      this.#suggestHelper(node[char], list, curr + char);
-    }
-  }
-
   suggest(prefix) {
     if (prefix.length < this.min) {
       return [];
     }
 
     let node = this.#root;
-    let curr = "";
+    let char = "";
+    this.#suggestions = new Set();
 
     for (let i = 0; i < prefix.length; i++) {
       if (!node[prefix[i]]) {
         return [];
       }
       node = node[prefix[i]];
-      curr += prefix[i];
+      char += prefix[i];
     }
 
-    let list = [];
-
-    this.#suggestHelper(node, list, curr);
-    return list;
+    this.#aggregateNodes(node, char);
+    return this.suggestions;
   }
 
   search(query) {
@@ -140,5 +130,9 @@ export class SearchService {
 
   get trie() {
     return this.#root;
+  }
+
+  get suggestions() {
+    return Array.from(this.#suggestions);
   }
 }
