@@ -69,4 +69,8 @@ describe("SearchService", () => {
     expect(searchService.search("ade")).toEqual([]);
     expect(searchService.search("aam")).toEqual([]);
   });
+
+  it("should suggest words", () => {
+    expect(searchService.suggest("sol")).toEqual(["solangi", "sollicitudin"]);
+  });
 });
