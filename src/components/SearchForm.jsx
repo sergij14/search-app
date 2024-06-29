@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
+import { AutoComplete, Button, Space } from "antd";
 
-export default function SearchForm({ queryString, setQueryString, onSubmit }) {
+export default function SearchForm({
+  suggestions,
+  onSearch,
+  setQueryString,
+  onSubmit,
+}) {
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        value={queryString}
-        onChange={({ target }) => setQueryString(target.value)}
-        type="text"
-        placeholder="Search..."
+    <Space.Compact style={{ width: "100%" }}>
+      <AutoComplete
+        options={suggestions}
+        style={{ width: "100%" }}
+        popupMatchSelectWidth={252}
+        size="large"
+        onSelect={(value) => setQueryString(value)}
+        onSearch={(term) => onSearch(term)}
+        placeholder="Search term..."
+        onChange={(value) => setQueryString(value)}
       />
-      <button type="submit">Search</button>
-    </form>
+      <Button size="large" type="primary" onClick={onSubmit}>
+        Search
+      </Button>
+    </Space.Compact>
   );
 }

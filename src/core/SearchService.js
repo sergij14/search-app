@@ -90,6 +90,10 @@ export class SearchService {
   }
 
   suggest(prefix) {
+    if (prefix.length < this.min) {
+      return [];
+    }
+
     let node = this.#root;
     let curr = "";
 

@@ -1,31 +1,44 @@
+import { List, Space } from "antd";
+
 export default function SearchResults({ results }) {
   return (
-    <div>
-      <h2>Data count: {results?.length || 0}</h2>
-      {(results || []).map(({ title, id, body, preview = {} }) => {
-        return (
-          <div
-            key={id}
-            style={{
-              border: "1px gray solid",
-              padding: "10px",
-              marginBottom: "10px",
-            }}
-          >
-            <h3
-              dangerouslySetInnerHTML={{
-                __html: `${preview?.title ? preview.title : title}`,
-              }}
+    <Space
+      direction="vertical"
+      style={{ margin: "20px 0", width: "100%" }}
+      size="middle"
+    >
+      <List
+        pagination={{
+          position: "bottom",
+          align: "end",
+          pageSize: 25,
+          showSizeChanger: false,
+        }}
+        dataSource={results}
+        renderItem={({ title, id, body, preview = {} }) => (
+          <List.Item>
+            <List.Item.Meta
+              title={
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: `${preview?.title ? preview.title : title}`,
+                  }}
+                />
+              }
+              description={
+                <>
+                  <p>ID: {id}</p>
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: `${preview?.body ? preview.body : body}`,
+                    }}
+                  />
+                </>
+              }
             />
-            <p>id: {id}</p>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: `${preview?.body ? preview.body : body}`,
-              }}
-            />
-          </div>
-        );
-      })}
-    </div>
+          </List.Item>
+        )}
+      />
+    </Space>
   );
 }

@@ -5,24 +5,29 @@ const useApp = () => {
   const [results, setResults] = useState();
   const [initialData, setInitialData] = useState();
   const [searchService, setSearchService] = useState();
+  const [suggestions, setSuggestions] = useState([]);
+  const [queryString, setQueryString] = useState("");
   const fetchData = () => fetch("https://jsonplaceholder.typicode.com/posts");
 
-  const [queryString, setQueryString] = useState("");
+  const onSearch = (term) => {
+    setSuggestions(
+      (searchService?.suggest(term) || []).map((value) => ({ value }))
+    );
+  };
 
-  const onSubmit = (ev) => {
-    ev.preventDefault();
+  const onSubmit = () => {
     if (!queryString.length) {
       return setResults(undefined);
     }
 
-    const searchResults = searchService.search(queryString);
+    const searchResults = searchService?.search(queryString) || [];
+
     setResults(
       searchResults.map(({ index, metadata: { preview } }) => ({
         ...initialData[index],
         preview,
       }))
     );
-    return;
   };
 
   useEffect(() => {
@@ -38,12 +43,10 @@ const useApp = () => {
 
   return {
     results: results || initialData,
-    setResults,
-    initialData,
-    searchService,
-    queryString,
-    setQueryString,
+    suggestions,
+    onSearch,
     onSubmit,
+    setQueryString,
   };
 };
 

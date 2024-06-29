@@ -3,29 +3,19 @@ import SearchResults from "./SearchResults";
 import useApp from "../hooks/useApp";
 
 export default function App() {
-  const {
-    setResults,
-    initialData,
-    searchService,
-    results,
-    queryString,
-    setQueryString,
-    onSubmit,
-  } = useApp();
+  const { results, suggestions, onSearch, onSubmit, setQueryString } = useApp();
 
   return (
-    <>
+    <div style={{ maxWidth: "1024px", margin: "0 auto", padding: '20px' }}>
       <SearchForm
         {...{
-          setResults,
-          initialData,
-          searchService,
-          queryString,
+          suggestions,
+          onSearch,
           setQueryString,
           onSubmit,
         }}
       />
       <SearchResults {...{ results }} />
-    </>
+    </div>
   );
 }
