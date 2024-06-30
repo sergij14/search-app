@@ -68,7 +68,7 @@ export const useApp = () => {
           min: minCharsCount,
         })
       );
-
+      setResults(undefined);
       setSuggestions([]);
       setQueryString("");
     }
