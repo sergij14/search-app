@@ -1,6 +1,11 @@
-import { Button, Flex, List, Typography } from "antd";
+import { Button, Card, Flex, List, Typography } from "antd";
 
-export default function SearchResults({ results, initialData, setResults }) {
+export default function SearchResults({
+  searchFieldsOptions,
+  results,
+  initialData,
+  setResults,
+}) {
   return (
     <>
       {results ? (
@@ -21,27 +26,23 @@ export default function SearchResults({ results, initialData, setResults }) {
           showSizeChanger: false,
         }}
         dataSource={results || initialData}
-        renderItem={({ title, id, body, preview = {} }) => (
+        renderItem={(item) => (
           <List.Item>
-            <List.Item.Meta
-              title={
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: `${preview?.title ? preview.title : title}`,
-                  }}
-                />
-              }
-              description={
-                <>
-                  <p>ID: {id}</p>
+            <Card style={{width: '100%'}}>
+              {searchFieldsOptions.map(({ value }) => (
+                <div key={value} style={{ margin: "16px 0" }}>
+                  <Typography.Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                    {value}:
+                  </Typography.Text>
                   <p
                     dangerouslySetInnerHTML={{
-                      __html: `${preview?.body ? preview.body : body}`,
+                      __html: item.preview?.[value] || item[value],
                     }}
+                    style={{ margin: "0" }}
                   />
-                </>
-              }
-            />
+                </div>
+              ))}
+            </Card>
           </List.Item>
         )}
       />
