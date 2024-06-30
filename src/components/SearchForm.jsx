@@ -36,6 +36,9 @@ export default function SearchForm({
           onSearch={(term) => onSearch(term)}
           placeholder="Search term..."
           onChange={(value) => setQueryString(value)}
+          onKeyDown={(ev) => {
+            if (ev.key === "Enter") onSubmit();
+          }}
         />
         <Button size="large" type="primary" onClick={onSubmit}>
           Search
