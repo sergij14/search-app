@@ -9,6 +9,7 @@ import {
   Typography,
 } from "antd";
 import { FETCH_ENDPOINTS } from "../hooks/useApp";
+import styles from "./App.module.css";
 
 export default function SearchForm({
   suggestions,
@@ -25,11 +26,11 @@ export default function SearchForm({
 }) {
   return (
     <>
-      <Space.Compact style={{ width: "100%", marginBottom: "10px" }}>
+      <Space.Compact className={styles["search-form"]}>
         <AutoComplete
           key={JSON.stringify({ minCharsCount, endpoint })}
           options={suggestions}
-          style={{ width: "100%" }}
+          className={styles["width-full"]}
           popupMatchSelectWidth={252}
           size="large"
           onSelect={(value) => setQueryString(value)}
@@ -45,12 +46,12 @@ export default function SearchForm({
         </Button>
       </Space.Compact>
 
-      <Flex gap="middle" justify="space-between" style={{ marginTop: "10px" }}>
+      <Flex className={styles["search-props"]}>
         <Flex gap={10} vertical>
           <Typography.Text>Fields to search in:</Typography.Text>
           <Select
             onChange={(value) => setSearchFields(value)}
-            style={{ width: "200px" }}
+            className={styles["width-full"]}
             mode="multiple"
             value={searchFields}
             options={searchFieldsOptions}
@@ -60,7 +61,7 @@ export default function SearchForm({
           <Typography.Text>Min characters count:</Typography.Text>
           <Select
             onChange={(value) => setMinCharsCount(value)}
-            style={{ width: "200px" }}
+            className={styles["width-full"]}
             value={minCharsCount}
             options={[
               { label: 2, value: 2 },
@@ -74,7 +75,7 @@ export default function SearchForm({
         <Typography.Text>Fetch endpoint:</Typography.Text>
         <Select
           onChange={(value) => setEndpoint(value)}
-          style={{ width: "400px" }}
+          className={styles["width-full"]}
           value={endpoint}
           options={FETCH_ENDPOINTS.map((field) => ({
             value: field,

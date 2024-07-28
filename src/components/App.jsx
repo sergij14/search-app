@@ -1,6 +1,7 @@
 import SearchForm from "./SearchForm";
 import SearchResults from "./SearchResults";
 import { useApp } from "../hooks/useApp";
+import styles from './App.module.css';
 
 export default function App() {
   const {
@@ -13,7 +14,7 @@ export default function App() {
   } = useApp();
 
   return (
-    <div style={{ maxWidth: "1024px", margin: "0 auto", padding: "20px" }}>
+    <div className={styles.container}>
       <SearchForm {...{ ...searchProps, searchFields, searchFieldsOptions }} />
       <SearchResults
         {...{ searchFieldsOptions, results, setResults, initialData }}
