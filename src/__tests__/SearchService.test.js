@@ -78,4 +78,18 @@ describe("SearchService", () => {
       "sollicitudin",
     ]);
   });
+
+  it.each([
+    ["an empty string", ""],
+    ["only spaces", "   "],
+    ["only whitespace characters", " \t\n "],
+    ["only punctuation", ".,!"],
+    ["spaces and punctuation", " ... --- "],
+    ["punctuation that is not stripped", "???"],
+  ])("should return nothing for a query of %s", (_, query) => {
+    expect(searchService.search(query)).toEqual({
+      suggestions: [],
+      results: [],
+    });
+  });
 });

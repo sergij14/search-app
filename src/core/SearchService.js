@@ -84,7 +84,7 @@ export class SearchService {
       this.regex.split
     );
 
-    if (searchTerm.length < this.min) {
+    if (!searchTerm || searchTerm.length < this.min) {
       return { suggestions: [], results: [] };
     }
 
