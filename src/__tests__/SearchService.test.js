@@ -85,11 +85,51 @@ describe("SearchService", () => {
     ["only whitespace characters", " \t\n "],
     ["only punctuation", ".,!"],
     ["spaces and punctuation", " ... --- "],
-    ["punctuation that is not stripped", "???"],
+    ["other punctuation and symbols", "??? @ [+]"],
   ])("should return nothing for a query of %s", (_, query) => {
     expect(searchService.search(query)).toEqual({
       suggestions: [],
       results: [],
     });
+  });
+
+  it.each([
+    "sol?",
+    "[sol]",
+    "<sol>",
+    "+sol|",
+    "@sol",
+    "“sol”",
+    "sol.,/#!$%^&*;:{}=-_`~()'\"",
+  ])("should ignore punctuation and symbols in the query %s", (query) => {
+    expect(searchService.search(query).suggestions).toEqual([
+      "solangi",
+      "sollicitudin",
+    ]);
+  });
+
+  it.each(["sol [", "sol \\"])(
+    "should not throw on regex characters in the query %s",
+    (query) => {
+      expect(searchService.search(query)).toEqual(searchService.search("sol"));
+    }
+  );
+
+  it("should strip punctuation and symbols from indexed words", () => {
+    searchService = new SearchService([{ title: "Why? [Because]" }], {
+      fields: ["title"],
+    });
+
+    expect(searchService.search("why").suggestions).toEqual(["why"]);
+    expect(searchService.search("because").suggestions).toEqual(["because"]);
+  });
+
+  it("should keep non-Latin and accented letters", () => {
+    searchService = new SearchService([{ title: "გამარჯობა Café" }], {
+      fields: ["title"],
+    });
+
+    expect(searchService.search("გამ").suggestions).toEqual(["გამარჯობა"]);
+    expect(searchService.search("caf").suggestions).toEqual(["café"]);
   });
 });

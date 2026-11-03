@@ -9,7 +9,7 @@ export class SearchService {
     this.fields = options.fields || [];
     this.regex = options.regex || {
       split: /\s/g,
-      replace: /[.,\/#!$%\^&\*;:{}=\-_`~()'"“]/g,
+      replace: /[\p{P}\p{S}]/gu,
     };
     this.min = options.min || 3;
 
