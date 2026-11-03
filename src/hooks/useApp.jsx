@@ -30,11 +30,11 @@ export const useApp = () => {
   };
 
   const onSubmit = () => {
-    if (!queryString.length) {
+    if (!queryString.length || !searchService) {
       return setResults(undefined);
     }
 
-    const { results: searchResults } = searchService?.search(queryString) || [];
+    const { results: searchResults } = searchService.search(queryString);
 
     setResults(
       searchResults.map(({ index, metadata: { preview } }) => ({
